@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 
 const Home: NextPage = () => {
   return (
-    <div className="bg-slate-400 py-20 px-10 grid gap-10 ">
+    <div className="bg-slate-400 py-20 px-10 grid gap-10 min-h-screen">
       <div className="bg-white rounded-3xl shadow-xl p-6">
         <div>
           <span className="font-semibold text-2xl">Select Item</span>
@@ -45,8 +45,42 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
-      <div className="bg-white rounded-3xl shadow-xl p-6"></div>
-      <div className="bg-white rounded-3xl shadow-xl p-6"></div>
+      <div className="bg-white rounded-3xl shadow-xl p-6">
+        <div className="flex justify-between items-center mb-5">
+          <span className="font-semibold">←</span>
+          <div className="space-x-3">
+            <span className="text-yellow-600">★ 4.9</span>
+            <span className="shadow-xl p-2 rounded-md">❤</span>
+          </div>
+        </div>
+        <div className="bg-zinc-400 h-72 mb-5" />
+        <div className="flex flex-col ">
+          <span className="font-semibold text-xl">Swoon Lounge</span>
+          <span className="text-xs text-gray-500">Chair</span>
+          <div className="mt-3 mb-5 flex justify-between items-center">
+            <div>
+              <input type="radio" />
+              <input type="radio" />
+              <input type="radio" />
+            </div>
+            <div className="flex items-center space-x-3">
+              <button className="bg-sky-200 rounded-lg flex justify-center items-center aspect-square w-8 text-xl text-gray-500">
+                -
+              </button>
+              <span>1</span>
+              <button className="bg-sky-200 rounded-lg flex justify-center items-center aspect-square w-8 text-xl text-gray-500">
+                +
+              </button>
+            </div>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="font-semibold text-2xl">$450</span>
+            <button className="bg-blue-500 py-2 px-8 text-xs text-white text-center rounded-lg">
+              Add To Cart
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
