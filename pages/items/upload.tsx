@@ -50,7 +50,7 @@ const Upload: NextPage = () => {
         </label>
         <textarea
           rows={4}
-          className="mt-1 shadow-sm w-full focus:ring-orange-500 focus:border-orange-500 rounded-md border-gray-300"
+          className="mt-1 shadow-sm w-full focus:ring-orange-500 focus:border-orange-500 rounded-md border-gray-300 resize-none"
         />
       </div>
       <button className="w-full mt-3 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md shadow-sm text-sm font-medium border border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none">
