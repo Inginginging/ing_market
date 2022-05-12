@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 
-const Live: NextPage = () => {
+const Streams: NextPage = () => {
   return (
     <div className="py-10  space-y-4 divide-y-2">
       {[1, 1, 1, 1, 1].map((_, i) => (
@@ -31,4 +31,4 @@ const Live: NextPage = () => {
   );
 };
 
-export default Live;
+export default Streams;
