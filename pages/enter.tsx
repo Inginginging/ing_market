@@ -1,5 +1,7 @@
 import type { NextPage } from "next";
 import { useState } from "react";
+import Button from "../components/button";
+import Input from "../components/input";
 import { cls } from "../libs/utils";
 
 const Enter: NextPage = () => {
@@ -37,38 +39,21 @@ const Enter: NextPage = () => {
             </button>
           </div>
         </div>
-        <form className="flex flex-col mt-8">
-          <label htmlFor="input" className="text-sm text-gray-700 font-medium">
-            {method === "email" ? "Email Address" : null}
-            {method === "phone" ? "Phone Number" : null}
-          </label>
-          <div className="mt-1">
-            {method === "email" ? (
-              <input
-                id="input"
-                type="email"
-                className="appearance-none w-full px-4 py-2 border border-gray-300 rounded-md shodow-sm placeholder-gray-500 focus:ouline-none focus:ring-orange-500 focus:border-orange-500"
-                required
-              />
-            ) : null}
-            {method === "phone" ? (
-              <div className="flex rounded-md shadow-sm">
-                <span className="flex items-center justify-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 select-none text-sm">
-                  +82
-                </span>
-                <input
-                  id="input"
-                  type="number"
-                  className="appearance-none w-full px-4 py-2 border border-gray-300 rounded-md rounded-l-none shodow-sm placeholder-gray-500 focus:ouline-none focus:ring-orange-500 focus:border-orange-500"
-                  required
-                />
-              </div>
-            ) : null}
-          </div>
-          <button className="mt-3 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md shadow-sm text-sm font-medium border border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none">
-            {method === "email" ? "Get Login Link" : null}
-            {method === "phone" ? "Get One-Time Password" : null}
-          </button>
+        <form className="flex flex-col mt-8 space-y-4">
+          {method === "email" ? (
+            <Input name="email" label="Email Address" type="email" required />
+          ) : null}
+          {method === "phone" ? (
+            <Input
+              name="phone"
+              label="Phone number"
+              type="number"
+              kind="phone"
+              required
+            />
+          ) : null}
+          {method === "email" ? <Button text="Get Login Link" /> : null}
+          {method === "phone" ? <Button text="Get One-Time Password" /> : null}
         </form>
         <div className="mt-8">
           <div className="relative">
