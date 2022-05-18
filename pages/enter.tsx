@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "../components/button";
 import Input from "../components/input";
-import { cls } from "../libs/utils";
+import useMutation from "../libs/client/useMutation";
+import { cls } from "../libs/client/utils";
 
 interface IEnterForm {
   email?: string;
@@ -11,6 +12,7 @@ interface IEnterForm {
 }
 
 const Enter: NextPage = () => {
+  const [enter, { loading, data, error }] = useMutation("/api/users/enter");
   const [submitting, setSubmitting] = useState(false);
   const [method, setMethod] = useState<"email" | "phone">("email");
   const onEmailClick = () => {
@@ -23,7 +25,7 @@ const Enter: NextPage = () => {
   };
   const { register, handleSubmit, reset } = useForm();
   const onValid = (data: IEnterForm) => {
-    setSubmitting(true);
+    /* setSubmitting(true);
     fetch("/api/users/enter", {
       method: "POST", //fetch 방법
       body: JSON.stringify(data), //fetch 내용
@@ -32,7 +34,8 @@ const Enter: NextPage = () => {
       },
     }).then(() => {
       setSubmitting(false);
-    });
+    }); */
+    enter(data);
   };
 
   return (
