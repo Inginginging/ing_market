@@ -7,6 +7,7 @@ interface IInputProps {
   type: string;
   required: boolean;
   register: UseFormRegisterReturn;
+  [key: string]: any;
 }
 
 export default function Input({
