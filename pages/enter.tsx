@@ -11,6 +11,7 @@ interface IEnterForm {
 }
 
 const Enter: NextPage = () => {
+  const [submitting, setSubmitting] = useState(false);
   const [method, setMethod] = useState<"email" | "phone">("email");
   const onEmailClick = () => {
     reset(); //phone의 정보를 reset
@@ -22,7 +23,16 @@ const Enter: NextPage = () => {
   };
   const { register, handleSubmit, reset } = useForm();
   const onValid = (data: IEnterForm) => {
-    console.log(data);
+    setSubmitting(true);
+    fetch("/api/users/enter", {
+      method: "POST", //fetch 방법
+      body: JSON.stringify(data), //fetch 내용
+      headers: {
+        "Content-Type": "application/json", //fetch body의 데이터 유형
+      },
+    }).then(() => {
+      setSubmitting(false);
+    });
   };
 
   return (
