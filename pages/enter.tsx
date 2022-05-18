@@ -13,7 +13,6 @@ interface IEnterForm {
 
 const Enter: NextPage = () => {
   const [enter, { loading, data, error }] = useMutation("/api/users/enter");
-  const [submitting, setSubmitting] = useState(false);
   const [method, setMethod] = useState<"email" | "phone">("email");
   const onEmailClick = () => {
     reset(); //phone의 정보를 reset
@@ -35,6 +34,7 @@ const Enter: NextPage = () => {
     }).then(() => {
       setSubmitting(false);
     }); */
+    if (loading) return;
     enter(data);
   };
 

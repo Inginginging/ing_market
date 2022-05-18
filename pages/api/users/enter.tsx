@@ -8,6 +8,6 @@ export default async function handler(
   if (req.method !== "POST") {
     res.status(405).end(); //POST method가 아니면 잘못된 method
   }
-  console.log(req.body.email);
+  console.log(req.body);
   res.status(200).end();
 }
