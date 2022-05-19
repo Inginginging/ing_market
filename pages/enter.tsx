@@ -12,7 +12,7 @@ interface IEnterForm {
 }
 
 const Enter: NextPage = () => {
-  const [enter, { loading, data, error }] = useMutation("/api/users/enter");
+  const [enter, { loading, data, error }] = useMutation("/api/users/enter"); //useMutation이 반환하는 값들
   const [method, setMethod] = useState<"email" | "phone">("email");
   const onEmailClick = () => {
     reset(); //phone의 정보를 reset
@@ -35,7 +35,7 @@ const Enter: NextPage = () => {
       setSubmitting(false);
     }); */
     if (loading) return;
-    enter(data);
+    enter(data); //useMutation hook의 mutation fn의 인자로 들어감
   };
 
   return (

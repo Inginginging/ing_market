@@ -1,25 +1,24 @@
 import { useState } from "react";
 
-interface UseMutaionState {
+interface IUseMutaionState {
   loading: boolean;
   data?: object;
   error?: object;
 }
-type UseMutaionResult = [(data: any) => void, UseMutaionState]; //useMutaion func은 함수 하나(mutaion)와 UseMutationState를 반환
+type UseMutaionResult = [(data: any) => void, IUseMutaionState]; //useMutation 반환값의 type => useMutaion func은 함수 하나(mutaion)와 UseMutationState를 반환
 
 export default function useMutation(url: string): UseMutaionResult {
-  const [state, setState] = useState<UseMutaionState>({
+  const [state, setState] = useState<IUseMutaionState>({
     loading: false,
     data: undefined,
     error: undefined,
-  });
-
+  }); //state의 초깃값 설정
   function mutation(data: any) {
     setState((prev) => ({ ...prev, loading: true }));
     fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json", //body의 data 형식을 Content-Type으로 만듬
       },
       body: JSON.stringify(data),
     })

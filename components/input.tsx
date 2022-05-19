@@ -17,6 +17,7 @@ export default function Input({
   type,
   required,
   register,
+  ...rest
 }: IInputProps) {
   return (
     <div>
@@ -29,6 +30,7 @@ export default function Input({
       {kind === "text" ? (
         <div className="rounded-md relative flex  items-center shadow-sm">
           <input
+            {...rest}
             required={required}
             type={type}
             {...register}
@@ -43,6 +45,7 @@ export default function Input({
             <span className="text-gray-500 text-sm">$</span>
           </div>
           <input
+            {...rest}
             required={required}
             type={type}
             {...register}
@@ -60,6 +63,7 @@ export default function Input({
             +82
           </span>
           <input
+            {...rest}
             required={required}
             type={type}
             {...register}
