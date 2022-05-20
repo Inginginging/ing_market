@@ -1,8 +1,10 @@
+import mail from "@sendgrid/mail";
 import twilio from "twilio";
 import { NextApiRequest, NextApiResponse } from "next";
 import client from "../../../libs/server/client";
 import withHandler, { ResponseType } from "../../../libs/server/withHandler";
 
+mail.setApiKey(process.env.SENDGRIDE_API!);
 const twilioClient = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 
 async function handler(
@@ -30,12 +32,21 @@ async function handler(
       },
     },
   });
-
+  //token 받기
   if (phone) {
     const message = await twilioClient.messages.create({
       messagingServiceSid: process.env.TWILIO_MSID,
       to: process.env.PHONE_NUMBER!,
       body: `Ing Market 인증번호  ${payload}`,
+    });
+    console.log(message);
+  } else if (email) {
+    const message = await mail.send({
+      from: process.env.EMAIL!,
+      to: process.env.EMAIL!,
+      subject: "Ing Market 인증 메일",
+      text: `당신의 인증 번호는 ${payload} 입니다.`,
+      html: `<strong>당신의 인증 번호는 ${payload} 입니다.</strong>`,
     });
     console.log(message);
   }
