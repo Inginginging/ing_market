@@ -24,16 +24,6 @@ const Enter: NextPage = () => {
   };
   const { register, handleSubmit, reset } = useForm();
   const onValid = (data: IEnterForm) => {
-    /* setSubmitting(true);
-    fetch("/api/users/enter", {
-      method: "POST", //fetch 방법
-      body: JSON.stringify(data), //fetch 내용
-      headers: {
-        "Content-Type": "application/json", //fetch body의 데이터 유형
-      },
-    }).then(() => {
-      setSubmitting(false);
-    }); */
     if (loading) return;
     enter(data); //useMutation hook의 mutation fn의 인자로 들어감
   };
@@ -92,8 +82,12 @@ const Enter: NextPage = () => {
               required
             />
           ) : null}
-          {method === "email" ? <Button text="Get Login Link" /> : null}
-          {method === "phone" ? <Button text="Get One-Time Password" /> : null}
+          {method === "email" ? (
+            <Button text={loading ? "Loading" : "Get Login Link"} />
+          ) : null}
+          {method === "phone" ? (
+            <Button text={loading ? "Loading" : "Get One-Time Password"} />
+          ) : null}
         </form>
         <div className="mt-8">
           <div className="relative">
