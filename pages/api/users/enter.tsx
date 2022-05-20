@@ -4,19 +4,39 @@ import withHandler from "../../../libs/server/withHandler";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { email, phone } = req.body;
-  const payload = email ? { email } : { phone: +phone }; //data
-  //upsert = update+insert
+  const user = email ? { email } : { phone: +phone }; //data
+  const payload = Math.floor(100000 + Math.random() * 900000) + ""; //random한 payload 생성
+  const token = await client.token.create({
+    data: {
+      payload,
+      user: {
+        //connectOrCreate => token과 connect된 user를 찾고, 없으면 create함.
+        connectOrCreate: {
+          where: {
+            ...user,
+          },
+          create: {
+            name: "사장님",
+            ...user,
+          },
+        },
+      },
+    },
+  });
+  console.log(token);
+
+  /* //upsert = update+insert
   const user = await client.user.upsert({
     where: {
-      ...payload,
+      ...user,
     },
     create: {
       name: "사장님",
-      ...payload,
+      ...user,
     },
     update: {},
-  });
-  console.log(user);
+  }); */
+
   /* let user;
   //email을 data로 받은 경우
   if (email) {
