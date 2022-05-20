@@ -1,11 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import client from "../../../libs/server/client";
-import withHandler from "../../../libs/server/withHandler";
+import withHandler, { ResponseType } from "../../../libs/server/withHandler";
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<ResponseType>
+) {
   const { email, phone } = req.body;
-  const user = email ? { email } : { phone: +phone }; //data
-  const payload = Math.floor(100000 + Math.random() * 900000) + ""; //random한 payload 생성
+  const user = email ? { email } : phone ? { phone: +phone } : null; //req로 받아온 data
+  if (!user) return res.status(400).json({ ok: false });
+  const payload = Math.floor(100000 + Math.random() * 900000) + ""; //token을 위한 random한 payload 생성
   const token = await client.token.create({
     data: {
       payload,
@@ -23,62 +27,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       },
     },
   });
-  console.log(token);
 
-  /* //upsert = update+insert
-  const user = await client.user.upsert({
-    where: {
-      ...user,
-    },
-    create: {
-      name: "사장님",
-      ...user,
-    },
-    update: {},
-  }); */
-
-  /* let user;
-  //email을 data로 받은 경우
-  if (email) {
-    //기존의 회원인지 확인
-    user = await client.user.findUnique({
-      where: {
-        email,
-      },
-    });
-    if (user) console.log("found it");
-    //기존 회원 db에 없을 경우
-    if (!user) {
-      console.log("Did not find. Will Create");
-      user = await client.user.create({
-        data: {
-          email,
-          name: "사장님",
-        },
-      });
-    }
-    console.log(user);
-  }
-  //phone을 data로 받은 경우
-  if (phone) {
-    user = await client.user.findUnique({
-      where: {
-        phone: +phone,
-      },
-    });
-    if (user) console.log("found it");
-    if (!user) {
-      console.log("Did not find. Will Create");
-      user = await client.user.create({
-        data: {
-          phone: +phone,
-          name: "사장님",
-        },
-      });
-    }
-    console.log(user);
-  } */
-  return res.status(200).end();
+  return res.status(200).json({ ok: true });
 }
 
 export default withHandler("POST", handler);
