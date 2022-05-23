@@ -1,40 +1,34 @@
-import { withIronSessionApiRoute } from "iron-session/next";
+import { withApiSession } from "libs/server/withSession";
 import { NextApiRequest, NextApiResponse } from "next";
 import client from "../../../libs/server/client";
 import withHandler, { ResponseType } from "../../../libs/server/withHandler";
-
-//rion session data의 type 추가하기
-declare module "iron-session" {
-  interface IronSessionData {
-    user?: {
-      id: number;
-    };
-  }
-}
 
 async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
   const { token } = req.body; //token을 받아옴
-  const exists = await client.token.findUnique({
+  const foundToken = await client.token.findUnique({
     where: {
       payload: token,
     },
     //include:{user:true}
   }); //db의 token과 일치하는지 확인
-  if (!exists) return res.status(404).end();
+  if (!foundToken) return res.status(404).end();
   //token이 일치한다면 user session 제작
   req.session.user = {
-    id: exists.userId,
+    id: foundToken.userId,
   };
   await req.session.save();
-  console.log(token);
-  return res.status(200).end();
+  //기존의 token들 모두 삭제
+  await client.token.deleteMany({
+    where: {
+      userId: foundToken.userId,
+    },
+  });
+  return res.json({
+    ok: true,
+  });
 }
 
-export default withIronSessionApiRoute(withHandler("POST", handler), {
-  cookieName: "ingmarketsession",
-  password:
-    "88995564752ajdl;ajiowpjrioqhoaJL;dajojeojawoaljflaohwonqlmlafnoaheoa;",
-});
+export default withApiSession(withHandler("POST", handler));

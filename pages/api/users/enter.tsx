@@ -12,7 +12,7 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const { email, phone } = req.body;
-  const user = email ? { email } : phone ? { phone: +phone } : null; //req로 받아온 data
+  const user = email ? { email } : phone ? { phone } : null; //req로 받아온 data
   if (!user) return res.status(400).json({ ok: false });
   const payload = Math.floor(100000 + Math.random() * 900000) + ""; //token을 위한 random한 payload 생성
   const token = await client.token.create({

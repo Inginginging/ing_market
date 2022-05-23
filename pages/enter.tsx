@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "../components/button";
 import Input from "../components/input";
@@ -43,7 +44,13 @@ const Enter: NextPage = () => {
     if (tokenLoading) return;
     confirmToken(data); //useMutation hook의 mutation fn의 인자로 들어감
   };
-
+  const router = useRouter();
+  //api/users/confirm에서 ok를 받아오면 home으로 redirect
+  useEffect(() => {
+    if (tokenData?.ok) {
+      router.push("/");
+    }
+  }, [tokenData, router]);
   return (
     <div className="mt-16 px-4">
       <h3 className="text-3xl font-bold text-center">Enter to IngMarcket</h3>
