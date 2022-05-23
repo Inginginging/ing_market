@@ -1,14 +1,14 @@
 import { useState } from "react";
 
-interface IUseMutaionState {
+interface IUseMutaionState<T> {
   loading: boolean;
-  data?: object;
+  data?: T;
   error?: object;
 }
-type UseMutaionResult = [(data: any) => void, IUseMutaionState]; //useMutation 반환값의 type => useMutaion func은 함수 하나(mutaion)와 UseMutationState를 반환
+type UseMutaionResult<T> = [(data: any) => void, IUseMutaionState<T>]; //useMutation 반환값의 type => useMutaion func은 함수 하나(mutaion)와 UseMutationState를 반환
 
-export default function useMutation(url: string): UseMutaionResult {
-  const [state, setState] = useState<IUseMutaionState>({
+export default function useMutation<T = any>(url: string): UseMutaionResult<T> {
+  const [state, setState] = useState<IUseMutaionState<T>>({
     loading: false,
     data: undefined,
     error: undefined,

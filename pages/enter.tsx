@@ -10,9 +10,19 @@ interface IEnterForm {
   email?: string;
   phone?: string;
 }
+interface ITokenForm {
+  token: string;
+}
+//mutation type
+interface IMutationResult {
+  ok: boolean;
+}
 
 const Enter: NextPage = () => {
-  const [enter, { loading, data, error }] = useMutation("/api/users/enter"); //useMutation이 반환하는 값들
+  const [enter, { loading, data, error }] =
+    useMutation<IMutationResult>("/api/users/enter"); //useMutation이 반환하는 값들
+  const [confirmToken, { loading: tokenLoading, data: tokenData }] =
+    useMutation<IMutationResult>("/api/users/confirm"); //useMutation이 반환하는 값들
   const [method, setMethod] = useState<"email" | "phone">("email");
   const onEmailClick = () => {
     reset(); //phone의 정보를 reset
@@ -22,73 +32,100 @@ const Enter: NextPage = () => {
     reset(); //email정보를 reset
     setMethod("phone");
   };
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset } = useForm<IEnterForm>();
+  const { register: tokenRegister, handleSubmit: tokenHandleSubmit } =
+    useForm<ITokenForm>();
   const onValid = (data: IEnterForm) => {
     if (loading) return;
     enter(data); //useMutation hook의 mutation fn의 인자로 들어감
+  };
+  const onTokenValid = (data: ITokenForm) => {
+    if (tokenLoading) return;
+    confirmToken(data); //useMutation hook의 mutation fn의 인자로 들어감
   };
 
   return (
     <div className="mt-16 px-4">
       <h3 className="text-3xl font-bold text-center">Enter to IngMarcket</h3>
       <div className="mt-16">
-        <div className="flex flex-col items-center">
-          <h5 className="text-sm font-medium text-gray-500">Enter Using:</h5>
-          <div className="grid grid-cols-2 gap-16 mt-10 border-b w-full">
-            <button
-              className={cls(
-                "pb-4 font-medium border-b-2",
-                method === "email"
-                  ? "border-orange-500 text-orange-500"
-                  : "border-transparent text-gray-500 hover:text-gray-400"
-              )}
-              onClick={onEmailClick}
-            >
-              Email
-            </button>
-            <button
-              className={cls(
-                "pb-4 font-medium border-b-2",
-                method === "phone"
-                  ? "border-orange-500 text-orange-500"
-                  : "border-transparent text-gray-500 hover:text-gray-400"
-              )}
-              onClick={onPhoneClick}
-            >
-              Phone
-            </button>
-          </div>
-        </div>
-        <form
-          onSubmit={handleSubmit(onValid)}
-          className="flex flex-col mt-8 space-y-4"
-        >
-          {method === "email" ? (
+        {data?.ok ? (
+          <form
+            onSubmit={tokenHandleSubmit(onTokenValid)}
+            className="flex flex-col mt-8 space-y-4"
+          >
+            {" "}
             <Input
-              register={register("email")}
-              name="email"
-              label="Email Address"
-              type="email"
-              required
-            />
-          ) : null}
-          {method === "phone" ? (
-            <Input
-              register={register("phone")}
-              name="phone"
-              label="Phone number"
+              register={tokenRegister("token")}
+              name="token"
+              label="인증 번호"
               type="number"
-              kind="phone"
               required
             />
-          ) : null}
-          {method === "email" ? (
-            <Button text={loading ? "Loading" : "Get Login Link"} />
-          ) : null}
-          {method === "phone" ? (
-            <Button text={loading ? "Loading" : "Get One-Time Password"} />
-          ) : null}
-        </form>
+            <Button text={tokenLoading ? "Loading" : "인증 번호 확인"} />
+          </form>
+        ) : (
+          <>
+            <div className="flex flex-col items-center">
+              <h5 className="text-sm font-medium text-gray-500">
+                Enter Using:
+              </h5>
+              <div className="grid grid-cols-2 gap-16 mt-10 border-b w-full">
+                <button
+                  className={cls(
+                    "pb-4 font-medium border-b-2",
+                    method === "email"
+                      ? "border-orange-500 text-orange-500"
+                      : "border-transparent text-gray-500 hover:text-gray-400"
+                  )}
+                  onClick={onEmailClick}
+                >
+                  Email
+                </button>
+                <button
+                  className={cls(
+                    "pb-4 font-medium border-b-2",
+                    method === "phone"
+                      ? "border-orange-500 text-orange-500"
+                      : "border-transparent text-gray-500 hover:text-gray-400"
+                  )}
+                  onClick={onPhoneClick}
+                >
+                  Phone
+                </button>
+              </div>
+            </div>
+            <form
+              onSubmit={handleSubmit(onValid)}
+              className="flex flex-col mt-8 space-y-4"
+            >
+              {method === "email" ? (
+                <Input
+                  register={register("email")}
+                  name="email"
+                  label="Email Address"
+                  type="email"
+                  required
+                />
+              ) : null}
+              {method === "phone" ? (
+                <Input
+                  register={register("phone")}
+                  name="phone"
+                  label="Phone number"
+                  type="number"
+                  kind="phone"
+                  required
+                />
+              ) : null}
+              {method === "email" ? (
+                <Button text={loading ? "Loading" : "Get Login Link"} />
+              ) : null}
+              {method === "phone" ? (
+                <Button text={loading ? "Loading" : "Get One-Time Password"} />
+              ) : null}
+            </form>
+          </>
+        )}
         <div className="mt-8">
           <div className="relative">
             <div className="absolute w-full border-t border-gray-500" />

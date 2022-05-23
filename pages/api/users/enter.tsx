@@ -34,21 +34,21 @@ async function handler(
   });
   //token 받기
   if (phone) {
-    const message = await twilioClient.messages.create({
+    /*  const message = await twilioClient.messages.create({
       messagingServiceSid: process.env.TWILIO_MSID,
       to: process.env.PHONE_NUMBER!,
       body: `Ing Market 인증번호  ${payload}`,
-    });
-    console.log(message);
+    }); 
+    console.log(message)*/
   } else if (email) {
-    const message = await mail.send({
+    /* const message = await mail.send({
       from: process.env.EMAIL!,
       to: process.env.EMAIL!,
       subject: "Ing Market 인증 메일",
       text: `당신의 인증 번호는 ${payload} 입니다.`,
       html: `<strong>당신의 인증 번호는 ${payload} 입니다.</strong>`,
-    });
-    console.log(message);
+    }); 
+    console.log(message)*/
   }
 
   return res.status(200).json({ ok: true });
