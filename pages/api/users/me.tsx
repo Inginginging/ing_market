@@ -16,24 +16,18 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-  const { token } = req.body; //token을 받아옴
-  const exists = await client.token.findUnique({
-    where: {
-      payload: token,
-    },
-    //include:{user:true}
-  }); //db의 token과 일치하는지 확인
-  if (!exists) return res.status(404).end();
-  //token이 일치한다면 user session 제작
-  req.session.user = {
-    id: exists.userId,
-  };
-  await req.session.save();
-  console.log(token);
-  return res.status(200).end();
+  console.log(req.session.user);
+  //session에 저장된 user의 id와 동일한 id를 가진 user를 db에서 찾아와 할당
+  const profile = await client.user.findUnique({
+    where: { id: req.session.user?.id },
+  });
+  return res.json({
+    ok: true,
+    profile,
+  });
 }
 
-export default withIronSessionApiRoute(withHandler("POST", handler), {
+export default withIronSessionApiRoute(withHandler("GET", handler), {
   cookieName: "ingmarketsession",
   password:
     "88995564752ajdl;ajiowpjrioqhoaJL;dajojeojawoaljflaohwonqlmlafnoaheoa;",
