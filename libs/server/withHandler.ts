@@ -33,7 +33,6 @@ export default function withHandler({
       //정상일 시 return 되어 실행될 함수
       await handler(req, res);
     } catch (error) {
-      console.log(error);
       return res.status(500).json({ error });
     }
   };
