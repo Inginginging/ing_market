@@ -1,4 +1,5 @@
 import { Product } from "@prisma/client";
+import Loading from "components/loading";
 import useUser from "libs/client/useUser";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -52,7 +53,7 @@ const Home: NextPage = () => {
           </FloatingButton>
         </div>
       ) : (
-        <h1>Loading...</h1>
+        <Loading />
       )}
     </Layout>
   );

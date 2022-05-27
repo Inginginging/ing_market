@@ -22,8 +22,23 @@ async function handler(
       },
     },
   });
-  console.log(product);
-  return res.json({ ok: true, product });
+  //product의 name을 공백을 기준으로 나눠 related product 찾기
+  const terms = product?.name.split(" ").map((word) => ({
+    name: {
+      contains: word,
+    },
+  }));
+  const relatedProducts = await client.product.findMany({
+    where: {
+      OR: terms, //terms에 해당하는 product 찾기
+      AND: {
+        id: {
+          not: product?.id, //자기 자신은 제외
+        },
+      },
+    },
+  });
+  return res.json({ ok: true, product, relatedProducts });
 }
 
 export default withApiSession(withHandler({ methods: ["GET"], handler }));
