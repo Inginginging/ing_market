@@ -5,15 +5,16 @@ export interface ResponseType {
   ok: boolean;
   [key: string]: any;
 }
+type Method = "GET" | "POST" | "DELETE";
 
 interface ConfigType {
-  method: "GET" | "POST" | "DELETE";
+  methods: Method[];
   handler: (req: NextApiRequest, res: NextApiResponse) => void;
   isPrivate?: boolean;
 }
 
 export default function withHandler({
-  method,
+  methods,
   handler,
   isPrivate = true,
 }: ConfigType) {
@@ -21,7 +22,7 @@ export default function withHandler({
     req: NextApiRequest,
     res: NextApiResponse
   ): Promise<any> {
-    if (req.method !== method) {
+    if (req.method && !methods.includes(req.method as any)) {
       //옳지 않은 req일때.
       return res.status(405).end();
     }
