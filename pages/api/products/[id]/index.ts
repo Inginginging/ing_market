@@ -1,13 +1,14 @@
 import { withApiSession } from "libs/server/withSession";
 import { NextApiRequest, NextApiResponse } from "next";
-import client from "../../../libs/server/client";
-import withHandler, { ResponseType } from "../../../libs/server/withHandler";
+import client from "../../../../libs/server/client";
+import withHandler, { ResponseType } from "../../../../libs/server/withHandler";
 
 async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
   const { id } = req.query; //req받은 url의 query사용
+  const { user } = req.session;
   const product = await client.product.findUnique({
     where: {
       id: +id,
@@ -38,7 +39,19 @@ async function handler(
       },
     },
   });
-  return res.json({ ok: true, product, relatedProducts });
+  //fav를 click한 상품정보 data
+  const isLiked = Boolean(
+    await client.fav.findFirst({
+      where: {
+        productId: product?.id,
+        userId: user?.id,
+      },
+      select: {
+        id: true,
+      },
+    })
+  );
+  return res.json({ ok: true, product, isLiked, relatedProducts });
 }
 
 export default withApiSession(withHandler({ methods: ["GET"], handler }));
