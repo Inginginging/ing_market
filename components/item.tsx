@@ -4,7 +4,7 @@ interface IItemProps {
   title: string;
   id: number;
   price: number;
-  comments: number;
+
   hearts: number;
 }
 

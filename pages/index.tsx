@@ -8,10 +8,16 @@ import FloatingButton from "../components/floating_button";
 import Item from "../components/item";
 import Layout from "../components/layout";
 
+interface ProductWithCount extends Product {
+  _count: {
+    fav: number;
+  };
+}
+
 //"/api/products"에서 받아온 res type
 interface ProductsResponse {
   ok: boolean;
-  products: Product[];
+  products: ProductWithCount[];
 }
 
 const Home: NextPage = () => {
@@ -30,8 +36,7 @@ const Home: NextPage = () => {
               key={product.id}
               title={product.name}
               price={product.price}
-              comments={1}
-              hearts={1}
+              hearts={product._count.fav}
             />
           ))}
           <FloatingButton href="/products/upload">
