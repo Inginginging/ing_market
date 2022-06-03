@@ -21,11 +21,13 @@ interface ProductDetailResponse {
 
 const ItemDetail: NextPage = () => {
   const router = useRouter(); //router의 query를 받아오기 위함
-  const { data } = useSWR<ProductDetailResponse>(
+  const { data, mutate } = useSWR<ProductDetailResponse>(
     router.query.id ? `/api/products/${router.query.id}` : null
   );
   const [toggleFav] = useMutation(`/api/products/${router.query.id}/fav`);
   const onFavClick = () => {
+    if (!data) return;
+    mutate({ ...data, isLiked: !data.isLiked }, false); //isliked의 상태 변화시킴, false=> refetch는 하지 않음
     toggleFav({}); //아무런 data를 post하지 않고 fav btn이 click됐다는 사실만 전달하면 됨.
   };
   return (
