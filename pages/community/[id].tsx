@@ -79,8 +79,9 @@ const CommunityPostDetail: NextPage = () => {
   useEffect(() => {
     if (answerData && answerData.ok) {
       reset(); //answer data가 정상이면 form reset
+      mutate(); //just refetch
     }
-  }, [answerData, reset]);
+  }, [answerData, reset, mutate]);
   return (
     <Layout canGoBack>
       {data ? (
@@ -161,7 +162,7 @@ const CommunityPostDetail: NextPage = () => {
                     {answer.createdAt
                       .toString()
                       .replace("T", " ")
-                      .substring(0, 19)}
+                      .substring(0, 16)}
                   </span>
                   <p className="text-gray-700 mt-2">{answer.answer}</p>
                 </div>
