@@ -1,4 +1,5 @@
 import { Post, User } from "@prisma/client";
+import useCoords from "libs/client/useCoords";
 import type { NextPage } from "next";
 import Link from "next/link";
 import useSWR from "swr";
@@ -18,7 +19,13 @@ interface IPostsResponse {
 }
 
 const Community: NextPage = () => {
-  const { data } = useSWR<IPostsResponse>(`/api/posts`);
+  const { latitude, longitude } = useCoords();
+  const { data } = useSWR<IPostsResponse>(
+    latitude && longitude
+      ? `/api/posts?latitude=${latitude}&longitude=${longitude}`
+      : null
+    //이렇게 하면 정보위치 동의를 하지 않은 사용자는 동네생활 page를 못봄.
+  );
   return (
     <Layout title="동네생활" hasTabBar>
       <div className="divide-y-[2px] space-y-4">
