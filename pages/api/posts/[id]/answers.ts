@@ -33,7 +33,6 @@ async function handler(
         answer,
       },
     });
-    console.log(newAnswer);
     return res.json({
       ok: true,
       answer: newAnswer,
