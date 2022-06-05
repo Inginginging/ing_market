@@ -11,37 +11,46 @@ async function handler(
     query: { id }, //query에서 product id 받아옴
     session: { user },
   } = req;
-  const favExist = await client.fav.findFirst({
+  const product = await client.product.findUnique({
     where: {
-      productId: +id,
-      userId: user?.id,
+      id: +id,
     },
   });
-  if (favExist) {
-    //이미 fav에 존재하는데 fav를 또 클릭하면 삭제
-    await client.fav.delete({
+  if (product) {
+    const favExist = await client.fav.findFirst({
       where: {
-        id: favExist.id,
+        productId: +id,
+        userId: user?.id,
       },
     });
+    if (favExist) {
+      //이미 fav에 존재하는데 fav를 또 클릭하면 삭제
+      await client.fav.delete({
+        where: {
+          id: favExist.id,
+        },
+      });
+    } else {
+      //fav에 POST
+      await client.fav.create({
+        data: {
+          user: {
+            connect: {
+              id: user?.id,
+            },
+          },
+          product: {
+            connect: {
+              id: +id,
+            },
+          },
+        },
+      });
+    }
+    return res.json({ ok: true });
   } else {
-    //fav에 POST
-    await client.fav.create({
-      data: {
-        user: {
-          connect: {
-            id: user?.id,
-          },
-        },
-        product: {
-          connect: {
-            id: +id,
-          },
-        },
-      },
-    });
+    return res.status(404).json({ ok: false });
   }
-  return res.json({ ok: true });
 }
 
 export default withApiSession(withHandler({ methods: ["POST"], handler }));

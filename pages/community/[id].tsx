@@ -5,6 +5,8 @@ import { cls } from "libs/client/utils";
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import Button from "../../components/button";
 import Layout from "../../components/layout";
@@ -28,12 +30,23 @@ interface ISWRResponse {
   isCuriosity: boolean;
 }
 
+interface IAnswerForm {
+  answer: string;
+}
+interface IAnswerResponse {
+  ok: boolean;
+  response: Answer;
+}
+
 const CommunityPostDetail: NextPage = () => {
   const router = useRouter();
+  const { register, handleSubmit, reset } = useForm<IAnswerForm>();
   const { data, mutate } = useSWR<ISWRResponse>(
     router.query.id ? `/api/posts/${router.query.id}` : null
   );
-  const [curiosity] = useMutation(`/api/posts/${router.query.id}/curiosity`);
+  const [curiosity, { loading }] = useMutation(
+    `/api/posts/${router.query.id}/curiosity`
+  );
   const onCuriosityClick = () => {
     if (!data) return;
     mutate(
@@ -53,8 +66,21 @@ const CommunityPostDetail: NextPage = () => {
       },
       false
     );
-    curiosity({});
+    if (!loading) {
+      curiosity({});
+    }
   };
+  const [sendAnswer, { loading: answerLoading, data: answerData }] =
+    useMutation<IAnswerResponse>(`/api/posts/${router.query.id}/answers`);
+  const onValid = (form: IAnswerForm) => {
+    if (answerLoading) return;
+    sendAnswer(form); //api로 form의 내용 보냄
+  };
+  useEffect(() => {
+    if (answerData && answerData.ok) {
+      reset(); //answer data가 정상이면 form reset
+    }
+  }, [answerData, reset]);
   return (
     <Layout canGoBack>
       {data ? (
@@ -132,21 +158,22 @@ const CommunityPostDetail: NextPage = () => {
                     {answer.user.name}
                   </span>
                   <span className="text-xs text-gray-500 block ">
-                    {+answer.createdAt}
+                    {answer.createdAt}
                   </span>
                   <p className="text-gray-700 mt-2">{answer.answer}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div className="px-4">
+          <form onSubmit={handleSubmit(onValid)} className="px-4">
             <TextArea
               name="description"
               placeholder="Answer this Question"
               required
+              register={register("answer", { required: true })}
             />
-            <Button text="Reply" />
-          </div>
+            <Button text={answerLoading ? "Loading..." : "Reply"} />
+          </form>
         </div>
       ) : (
         <Loading />

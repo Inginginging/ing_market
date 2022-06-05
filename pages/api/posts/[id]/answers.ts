@@ -10,6 +10,7 @@ async function handler(
   const {
     query: { id }, //query에서 post id 받아옴.
     session: { user },
+    body: { answer },
   } = req;
   const post = await client.post.findUnique({
     where: {
@@ -17,40 +18,25 @@ async function handler(
     },
   });
   if (post) {
-    //logic이 Fav와 매우 유사.
-    const curiosityExist = await client.curiosity.findFirst({
-      where: {
-        postId: +id,
-        userId: user?.id,
-      },
-      select: {
-        id: true,
+    const newAnswer = await client.answer.create({
+      data: {
+        user: {
+          connect: {
+            id: user?.id,
+          },
+        },
+        post: {
+          connect: {
+            id: +id,
+          },
+        },
+        answer,
       },
     });
-    if (curiosityExist) {
-      await client.curiosity.delete({
-        where: {
-          id: curiosityExist.id,
-        },
-      });
-    } else {
-      await client.curiosity.create({
-        data: {
-          user: {
-            connect: {
-              id: user?.id,
-            },
-          },
-          post: {
-            connect: {
-              id: +id,
-            },
-          },
-        },
-      });
-    }
+    console.log(newAnswer);
     return res.json({
       ok: true,
+      answer: newAnswer,
     });
   } else {
     return res.status(404).json({
