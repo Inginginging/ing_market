@@ -27,6 +27,7 @@ async function handler(
         select: {
           id: true,
           answer: true,
+          createdAt: true,
           user: {
             select: {
               id: true,
