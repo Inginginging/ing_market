@@ -1,7 +1,7 @@
 import { withApiSession } from "libs/server/withSession";
 import { NextApiRequest, NextApiResponse } from "next";
-import client from "../../../libs/server/client";
-import withHandler, { ResponseType } from "../../../libs/server/withHandler";
+import client from "../../../../libs/server/client";
+import withHandler, { ResponseType } from "../../../../libs/server/withHandler";
 
 async function handler(
   req: NextApiRequest,
@@ -9,6 +9,7 @@ async function handler(
 ) {
   const {
     query: { id },
+    session: { user },
   } = req;
   const post = await client.post.findFirst({
     where: {
@@ -43,9 +44,21 @@ async function handler(
       },
     },
   });
+  const isCuriosity = Boolean(
+    await client.curiosity.findFirst({
+      where: {
+        postId: +id,
+        userId: user?.id,
+      },
+      select: {
+        id: true,
+      },
+    })
+  );
   return res.json({
     ok: true,
     post,
+    isCuriosity,
   });
 }
 
