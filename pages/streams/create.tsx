@@ -23,7 +23,7 @@ const Create: NextPage = () => {
   const router = useRouter();
   const { register, handleSubmit } = useForm<IFormData>();
   const [createStream, { loading, data }] =
-    useMutation<IApiResponse>(`api/streams`);
+    useMutation<IApiResponse>(`/api/streams`);
   const onValid = (form: IFormData) => {
     if (loading) return;
     createStream(form);
@@ -44,7 +44,7 @@ const Create: NextPage = () => {
           type="text"
         />
         <Input
-          register={register("price", { required: true })}
+          register={register("price", { required: true, valueAsNumber: true })}
           required
           label="Price"
           placeholder="0.00"

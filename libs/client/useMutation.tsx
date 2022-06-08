@@ -7,6 +7,9 @@ interface IUseMutaionState<T> {
 }
 type UseMutaionResult<T> = [(data: any) => void, IUseMutaionState<T>]; //useMutation 반환값의 type => useMutaion func은 함수 하나(mutaion)와 UseMutationState를 반환
 
+//****useMutation은 지정 api 주소로 data를 mutate해서 POST하는 fn과,
+//그렇게 해서 받아오는 response data,loading state, error를 반환해주는 직접 만든 hook
+
 export default function useMutation<T = any>(url: string): UseMutaionResult<T> {
   const [state, setState] = useState<IUseMutaionState<T>>({
     loading: false,
