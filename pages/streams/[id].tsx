@@ -1,6 +1,8 @@
 import { Stream } from "@prisma/client";
+import useMutation from "libs/client/useMutation";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import Layout from "../../components/layout";
 import Message from "../../components/message";
@@ -9,12 +11,24 @@ interface IStreamResponse {
   ok: boolean;
   stream: Stream;
 }
+interface IFormData {
+  message: string;
+}
 
 const StreamDetail: NextPage = () => {
   const router = useRouter();
+  const { register, handleSubmit, reset } = useForm<IFormData>();
   const { data } = useSWR<IStreamResponse>(
     router.query.id ? `/api/streams/${router.query.id}` : null
   );
+  const [messageSender, { loading, data: messageSenderData }] = useMutation(
+    `/api/streams/${router.query.id}/message`
+  );
+  const onValid = (form: IFormData) => {
+    if (loading) return;
+    reset();
+    messageSender(form);
+  };
   return (
     <Layout canGoBack>
       <div className="py-10 px-4  space-y-4">
@@ -36,8 +50,12 @@ const StreamDetail: NextPage = () => {
             <Message message="미쳤어" />
           </div>
           <div className="fixed py-2 bg-white  bottom-0 inset-x-0">
-            <div className="flex relative max-w-md items-center  w-full mx-auto">
+            <form
+              onSubmit={handleSubmit(onValid)}
+              className="flex relative max-w-md items-center  w-full mx-auto"
+            >
               <input
+                {...register("message", { required: true })}
                 type="text"
                 className="shadow-sm rounded-full w-full border-gray-300 focus:ring-orange-500 focus:outline-none pr-12 focus:border-orange-500"
               />
@@ -46,7 +64,7 @@ const StreamDetail: NextPage = () => {
                   &rarr;
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
