@@ -35,7 +35,8 @@ const StreamDetail: NextPage = () => {
   const router = useRouter();
   const { register, handleSubmit, reset } = useForm<IFormData>();
   const { data, mutate } = useSWR<IStreamResponse>(
-    router.query.id ? `/api/streams/${router.query.id}` : null
+    router.query.id ? `/api/streams/${router.query.id}` : null,
+    { refreshInterval: 1000 }
   );
   const [messageSender, { loading, data: messageSenderData }] = useMutation(
     `/api/streams/${router.query.id}/message`
@@ -43,13 +44,29 @@ const StreamDetail: NextPage = () => {
   const onValid = (form: IFormData) => {
     if (loading) return;
     reset();
+    mutate(
+      (prev) =>
+        prev &&
+        ({
+          ...prev,
+          stream: {
+            ...prev.stream,
+            messages: [
+              ...prev.stream.messages,
+              {
+                id: Date.now(),
+                message: form.message,
+                user: {
+                  ...user,
+                },
+              },
+            ],
+          },
+        } as any),
+      false
+    ); //backend로 post되기전에 mutate (눈속임임)
     messageSender(form);
   };
-  useEffect(() => {
-    if (messageSenderData && messageSenderData.ok) {
-      mutate();
-    }
-  }, [messageSenderData, mutate]);
   return (
     <Layout canGoBack>
       {data ? (
