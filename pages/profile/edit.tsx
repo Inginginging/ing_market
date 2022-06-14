@@ -37,14 +37,21 @@ const EditProfile: NextPage = () => {
     if (user?.phone) setValue("phone", user.phone);
     if (user?.name) setValue("name", user.name);
   }, [user]);
-  const onValid = ({ email, phone, name, avatar }: IEditForm) => {
+  const onValid = async ({ email, phone, name, avatar }: IEditForm) => {
     if (loading) return;
     if (email === "" && phone === "") {
       setError("formErrors", {
         message: "Email OR Phone number are required. You need to choose one.",
       });
     }
-    editProfile({ name, email, phone });
+    if (avatar && avatar.length > 0) {
+      //get clouflare url
+      const cloudFlareRequest = await (await fetch(`/api/files`)).json();
+      console.log(cloudFlareRequest);
+      return;
+    } else {
+      editProfile({ name, email, phone });
+    }
   };
   useEffect(() => {
     if (data && !data.ok) {
