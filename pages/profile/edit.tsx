@@ -44,10 +44,17 @@ const EditProfile: NextPage = () => {
         message: "Email OR Phone number are required. You need to choose one.",
       });
     }
-    if (avatar && avatar.length > 0) {
+    if (avatar && avatar.length > 0 && user) {
       //get clouflare url
-      const cloudFlareRequest = await (await fetch(`/api/files`)).json();
-      console.log(cloudFlareRequest);
+      const { id, uploadURL } = await (await fetch(`/api/files`)).json();
+      //send file to the url
+      const form = new FormData();
+      form.append("file", avatar[0], user.id + "");
+      await fetch(uploadURL, {
+        //받아온 url로 form POST
+        method: "POST",
+        body: form,
+      });
       return;
     } else {
       editProfile({ name, email, phone });
