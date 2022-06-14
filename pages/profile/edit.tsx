@@ -38,7 +38,7 @@ const EditProfile: NextPage = () => {
     if (user?.name) setValue("name", user.name);
     if (user?.avatar)
       setAvatarPreview(
-        `https://imagedelivery.net/H_yIPSozL5v7ZLv9PjoVyA/${user.avatar}/public`
+        `https://imagedelivery.net/H_yIPSozL5v7ZLv9PjoVyA/${user.avatar}/avatar`
       );
   }, [user]);
   const onValid = async ({ email, phone, name, avatar }: IEditForm) => {

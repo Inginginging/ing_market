@@ -20,14 +20,14 @@ async function handler(
     return res.json({ ok: true, products });
   }
   if (req.method === "POST") {
-    const { name, price, description } = req.body; //upload page에서 useMutation을 사용해 req로 정보 보냄
+    const { name, price, description, photoId } = req.body; //upload page에서 useMutation을 사용해 req로 정보 보냄
     const { user } = req.session; //session에는 upload user의 정보가 있음
     const product = await client.product.create({
       data: {
         name,
         price: +price,
         description,
-        image: "xx",
+        image: photoId,
         user: {
           connect: {
             id: user?.id,
