@@ -36,6 +36,10 @@ const EditProfile: NextPage = () => {
     if (user?.email) setValue("email", user.email);
     if (user?.phone) setValue("phone", user.phone);
     if (user?.name) setValue("name", user.name);
+    if (user?.avatar)
+      setAvatarPreview(
+        `https://imagedelivery.net/H_yIPSozL5v7ZLv9PjoVyA/${user.avatar}/public`
+      );
   }, [user]);
   const onValid = async ({ email, phone, name, avatar }: IEditForm) => {
     if (loading) return;
@@ -46,16 +50,21 @@ const EditProfile: NextPage = () => {
     }
     if (avatar && avatar.length > 0 && user) {
       //get clouflare url
-      const { id, uploadURL } = await (await fetch(`/api/files`)).json();
+      const { uploadURL } = await (await fetch(`/api/files`)).json();
       //send file to the url
       const form = new FormData();
       form.append("file", avatar[0], user.id + "");
-      await fetch(uploadURL, {
-        //받아온 url로 form POST
-        method: "POST",
-        body: form,
-      });
-      return;
+      const {
+        result: { id },
+      } = await (
+        await fetch(uploadURL, {
+          //받아온 url로 form POST
+          method: "POST",
+          body: form,
+        })
+      ).json();
+      //send file info to backend
+      editProfile({ name, email, phone, avatarId: id });
     } else {
       editProfile({ name, email, phone });
     }
