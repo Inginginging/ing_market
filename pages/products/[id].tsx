@@ -3,6 +3,7 @@ import Loading from "components/loading";
 import useMutation from "libs/client/useMutation";
 import { cls } from "libs/client/utils";
 import type { NextPage } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import useSWR from "swr";
@@ -35,12 +36,17 @@ const ItemDetail: NextPage = () => {
       {data ? (
         <div className="px-4 py-4">
           <div className="mb-8">
-            <img
-              src={`https://imagedelivery.net/H_yIPSozL5v7ZLv9PjoVyA/${data.product.image}/product`}
-              className="h-96 bg-slate-300"
-            />
+            <div className="relative pb-96">
+              <Image
+                src={`https://imagedelivery.net/H_yIPSozL5v7ZLv9PjoVyA/${data.product.image}/product`}
+                className=" bg-slate-300 object-fill"
+                layout="fill"
+              />
+            </div>
             <div className="flex items-center space-x-3 py-3 border-b">
-              <img
+              <Image
+                width={48}
+                height={48}
                 src={`https://imagedelivery.net/H_yIPSozL5v7ZLv9PjoVyA/${data.product.user.avatar}/avatar`}
                 className="w-12 h-12 rounded-full bg-slate-300"
               />
