@@ -4,6 +4,7 @@ import { SWRConfig } from "swr";
 import useUser from "libs/client/useUser";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  console.log("APP IS RUNNING");
   return (
     <SWRConfig
       value={{
