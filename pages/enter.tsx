@@ -6,6 +6,9 @@ import Button from "../components/button";
 import Input from "../components/input";
 import useMutation from "../libs/client/useMutation";
 import { cls } from "../libs/client/utils";
+import dynamic from "next/dynamic";
+
+const Dynamic = dynamic(() => import("../components/dyanmic"));
 
 interface IEnterForm {
   email?: string;
@@ -115,14 +118,17 @@ const Enter: NextPage = () => {
                 />
               ) : null}
               {method === "phone" ? (
-                <Input
-                  register={register("phone")}
-                  name="phone"
-                  label="Phone number"
-                  type="number"
-                  kind="phone"
-                  required
-                />
+                <>
+                  <Dynamic />
+                  <Input
+                    register={register("phone")}
+                    name="phone"
+                    label="Phone number"
+                    type="number"
+                    kind="phone"
+                    required
+                  />
+                </>
               ) : null}
               {method === "email" ? (
                 <Button text={loading ? "Loading" : "Get Login Link"} />

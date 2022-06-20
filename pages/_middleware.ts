@@ -8,7 +8,9 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
   //login 되지 않은 사용자 enter 페이지로 redirect
   if (!req.url.includes("/api")) {
     if (!req.url.includes("/enter") && !req.cookies.ingmarketsession) {
-      return NextResponse.redirect("/enter");
+      const url = req.nextUrl.clone();
+      url.pathname = "/enter";
+      return NextResponse.redirect(url);
     }
   }
 }

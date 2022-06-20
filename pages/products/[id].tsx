@@ -54,7 +54,7 @@ const ItemDetail: NextPage = () => {
                 <p className="text-sm font-bold text-gray-700 cursor-pointer">
                   {data.product.user.name}
                 </p>
-                <Link href={`/users/profiles/${data.product.user.id}`}>
+                <Link href={`/profile/${data.product.user.id}`}>
                   <a className="text-xs font-bold text-gray-500 cursor-pointer">
                     View profile &rarr;
                   </a>
