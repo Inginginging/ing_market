@@ -1,10 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 
 interface IItemProps {
   title: string;
   id: number;
   price: number;
-
   hearts: number;
 }
 
