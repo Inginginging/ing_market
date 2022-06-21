@@ -3,10 +3,11 @@ import Loading from "components/loading";
 import useUser from "libs/client/useUser";
 import type { NextPage } from "next";
 import Head from "next/head";
-import useSWR from "swr";
+import useSWR, { SWRConfig } from "swr";
 import FloatingButton from "../components/floating_button";
 import Item from "../components/item";
 import Layout from "../components/layout";
+import client from "libs/server/client";
 
 export interface ProductWithCount extends Product {
   _count: {
@@ -36,7 +37,7 @@ const Home: NextPage = () => {
               key={product.id}
               title={product.name}
               price={product.price}
-              hearts={product._count.fav}
+              hearts={product._count?.fav || 0}
             />
           ))}
           <FloatingButton href="/products/upload">
@@ -64,4 +65,32 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+//SSR 과 SWR의 장점들을 모두 사용하는 구조
+const Page: NextPage<{ products: ProductWithCount[] }> = ({ products }) => {
+  return (
+    //캐쉬 정보 사용을 위해 fallback 사용
+    <SWRConfig
+      value={{
+        fallback: {
+          "/api/products": {
+            ok: true,
+            products,
+          },
+        },
+      }}
+    >
+      <Home />
+    </SWRConfig>
+  );
+};
+//api를 거치지 않고 바로 db로 접근해서 정보 가져옴
+export async function getServerSideProps() {
+  const products = await client?.product.findMany({});
+  return {
+    props: {
+      products: JSON.parse(JSON.stringify(products)),
+    },
+  };
+}
+
+export default Page;

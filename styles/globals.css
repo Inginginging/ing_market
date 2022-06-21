@@ -4,6 +4,7 @@
 
 body {
   -ms-overflow-style: none;
+  font-family: "Arial", "Poor Story";
 }
 ::-webkit-scrollbar {
   display: none;

@@ -3,7 +3,6 @@ import Document, { Head, Html, Main, NextScript } from "next/document";
 //server 단에서 한번만 running
 class CustomDocument extends Document {
   render(): JSX.Element {
-    console.log("DOCUMENT IS RUNNING");
     return (
       <Html lang="ko">
         <Head>
