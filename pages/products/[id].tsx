@@ -32,7 +32,7 @@ const ItemDetail: NextPage = () => {
     toggleFav({}); //아무런 data를 post하지 않고 fav btn이 click됐다는 사실만 전달하면 됨.
   };
   return (
-    <Layout canGoBack>
+    <Layout canGoBack seoTitle={data?.product.name}>
       {data ? (
         <div className="px-4 py-4">
           <div className="mb-8">

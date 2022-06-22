@@ -27,7 +27,7 @@ const Community: NextPage = () => {
     //이렇게 하면 정보위치 동의를 하지 않은 사용자는 동네생활 page를 못봄.
   );
   return (
-    <Layout title="동네생활" hasTabBar>
+    <Layout title="동네생활" hasTabBar seoTitle="동네생활">
       <div className="divide-y-[2px] space-y-4">
         {data?.posts.map((post) => (
           <Link href={`/community/${post.id}`} key={post.id}>

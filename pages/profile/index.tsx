@@ -19,7 +19,7 @@ const Profile: NextPage = () => {
   const { user } = useUser();
   const { data } = useSWR<IReviewResponse>(`/api/review`);
   return (
-    <Layout title="프로필" hasTabBar>
+    <Layout title="프로필" hasTabBar seoTitle="Profile">
       {user ? (
         <div className="px-4">
           <div className="flex items-center space-x-3 mt-4">

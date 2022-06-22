@@ -4,7 +4,7 @@ import Layout from "../../components/layout";
 
 const Liked: NextPage = () => {
   return (
-    <Layout title="좋아요" canGoBack>
+    <Layout title="좋아요" canGoBack seoTitle="좋아요">
       <div className="flex flex-col space-y-5 pb-10  divide-y">
         <ProductList kind="favs" />
       </div>

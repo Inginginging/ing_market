@@ -68,7 +68,7 @@ const StreamDetail: NextPage = () => {
     messageSender(form);
   };
   return (
-    <Layout canGoBack>
+    <Layout canGoBack seoTitle={data?.stream.name}>
       {data ? (
         <div className="py-10 px-4  space-y-4">
           {data.stream.cloudflareId ? (

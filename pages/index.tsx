@@ -25,10 +25,7 @@ const Home: NextPage = () => {
   const { user, isLoading } = useUser();
   const { data } = useSWR<ProductsResponse>("/api/products");
   return (
-    <Layout title="홈" hasTabBar>
-      <Head>
-        <title>Home</title>
-      </Head>
+    <Layout title="홈" hasTabBar seoTitle="Home">
       {data ? (
         <div className="flex flex-col space-y-5 divide-y">
           {data?.products?.map((product) => (

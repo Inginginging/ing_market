@@ -83,7 +83,7 @@ const CommunityPostDetail: NextPage = () => {
     }
   }, [answerData, reset, mutate]);
   return (
-    <Layout canGoBack>
+    <Layout canGoBack seoTitle={data?.post.question}>
       {data ? (
         <div>
           <span className="inline-flex my-3 ml-4 items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-300 text-gray-700">
