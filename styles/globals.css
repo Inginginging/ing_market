@@ -4,7 +4,7 @@
 
 body {
   -ms-overflow-style: none;
-  font-family: "Arial", "Poor Story";
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 ::-webkit-scrollbar {
   display: none;

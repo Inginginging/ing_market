@@ -30,6 +30,7 @@ const Home: NextPage = () => {
         <div className="flex flex-col space-y-5 divide-y">
           {data?.products?.map((product) => (
             <Item
+              image={`https://imagedelivery.net/H_yIPSozL5v7ZLv9PjoVyA/${product.image}/productAvatar`}
               id={product.id}
               key={product.id}
               title={product.name}

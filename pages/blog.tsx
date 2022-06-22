@@ -11,7 +11,7 @@ interface Post {
 
 const Blog: NextPage<{ posts: Post[] }> = ({ posts }) => {
   return (
-    <Layout title="Blog">
+    <Layout title="Blog" seoTitle="blog">
       <h1 className="font-semibold text-lg">Latest Posts:</h1>
       {posts.map((post, _i) => (
         <div key={_i} className="mb-5">
