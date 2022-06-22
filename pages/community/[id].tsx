@@ -1,6 +1,7 @@
 import { Answer, Post, User } from "@prisma/client";
 import Loading from "components/loading";
 import useMutation from "libs/client/useMutation";
+import useUser from "libs/client/useUser";
 import { cls } from "libs/client/utils";
 import type { NextPage } from "next";
 import Link from "next/link";
@@ -39,6 +40,7 @@ interface IAnswerResponse {
 }
 
 const CommunityPostDetail: NextPage = () => {
+  const { user } = useUser();
   const router = useRouter();
   const { register, handleSubmit, reset } = useForm<IAnswerForm>();
   const { data, mutate } = useSWR<ISWRResponse>(
@@ -90,8 +92,15 @@ const CommunityPostDetail: NextPage = () => {
             동네질문
           </span>
           <div className="flex mb-3 px-4 cursor-pointer pb-3  border-b items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-slate-300" />
-            <div>
+            {data.post.user.avatar ? (
+              <img
+                src={`https://imagedelivery.net/H_yIPSozL5v7ZLv9PjoVyA/${data.post.user.avatar}/avatar`}
+                className="w-16 h-16 rounded-full bg-slate-300"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-slate-300" />
+            )}
+            <div className="flex justify-between w-full">
               <p className="text-sm font-bold text-gray-700">
                 {data.post.user.name}
               </p>
@@ -153,7 +162,14 @@ const CommunityPostDetail: NextPage = () => {
           <div className="px-4 my-5 space-y-5">
             {data.post.answers.map((answer) => (
               <div key={answer.id} className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-slate-200 rounded-full" />
+                {answer.user.avatar ? (
+                  <img
+                    src={`https://imagedelivery.net/H_yIPSozL5v7ZLv9PjoVyA/${answer.user.avatar}/avatar`}
+                    className="w-8 h-8 rounded-full bg-slate-300"
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-slate-300" />
+                )}
                 <div>
                   <span className="text-sm block font-bold text-gray-700">
                     {answer.user.name}
