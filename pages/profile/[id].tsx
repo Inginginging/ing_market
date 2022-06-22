@@ -11,7 +11,7 @@ interface ReviewWithUser extends Review {
 }
 
 interface OtherProfileRelation extends User {
-  reviews: ReviewWithUser[];
+  reviews: ReviewWithUser[] | undefined;
 }
 interface IOtherProfile {
   profile: OtherProfileRelation;
@@ -112,7 +112,7 @@ const othersProfile = () => {
             </Link>
           </div>
           <div className="w-full border-b border-gray-200 mt-8" />
-          {data?.profile.reviews.map((review) => (
+          {data.profile.reviews?.map((review) => (
             <div key={review.id} className="mt-4 ">
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 rounded-full bg-slate-300" />
